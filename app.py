@@ -1,11 +1,13 @@
-from flask import Flask , render_template, request
+from flask import Flask , render_template, request, redirect
 from datetime import datetime
 from time import sleep
+from flask.helpers import url_for
 from sqlalchemy import ForeignKey
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from flask_login import LoginManager, UserMixin, login_manager, login_user, login_required, logout_user, current_user
-from werkzeug.security import generate_password_hash, check_password_hash #use sha256
+from werkzeug.security import  check_password_hash #use sha256
+
 
 
 app = Flask(__name__)
@@ -48,6 +50,33 @@ class Leave(db.Model):
     def __repr__(self) -> str:
         return f"{self.abstract}"
 
+
+class LeaveHandeler:
+    user:User
+    def __init__(self, user:User) -> None:
+        self.user = user
+
+    def applyLeave(self, request:request) -> bool:
+        if request.method=="POST":
+            userId = self.user
+            abstract = request.form["abstract"]
+            fromDate = request.form["fromdate"]
+            holdtime = list(map(int, fromDate.split("-")))
+            fromDate = datetime(holdtime[0], holdtime[1], holdtime[2])
+            toDate = request.form["todate"]
+            holdtime = list(map(int, toDate.split("-")))
+            toDate = datetime(holdtime[0], holdtime[1], holdtime[2])
+            summary = request.form["summary"]
+            print(fromDate, toDate)
+            
+            adding = Leave(userId=userId, abstract=abstract,fromDate=fromDate,toDate=toDate,summary=summary)
+            
+            db.session.add(adding)
+            db.session.commit()
+            return True
+        return False
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -58,7 +87,7 @@ def start_page() -> render_template:
     The Start page will only include a Login page for the employer and Employee...
     Login Credintials will determine the Acount type ad the privilages one account has
     """
-    user = User.query.filter_by(username="@mr.x").first()
+    user = User.query.filter_by(username="@lonewolf").first()
 
     login_user(user)
     
@@ -66,14 +95,17 @@ def start_page() -> render_template:
 
 @app.route("/login")#, methods=['POST'])
 @login_required
-def login() -> render_template:
+def login() -> redirect:
     #user = User.querry.filter_by(username="@mr.x")
 
     #login_user(user)
+    if current_user.isAdmin:
+        return redirect(url_for("admin_dashboard"))
+    else:
+        return redirect(url_for("user_dashboard"))
 
-    return f"<p>{current_user.first_name}</p>"
 
-@app.route("/commander/dashboard")
+@app.route("/commander-dashboard")
 @login_required
 def admin_dashboard() -> render_template:
     """
@@ -83,7 +115,8 @@ def admin_dashboard() -> render_template:
 
     return render_template("admin_dashboard.html")
 
-@app.route("/magot/dashboard")
+
+@app.route("/magot-dashboard")
 @login_required
 def user_dashboard() -> render_template:
     """
@@ -93,6 +126,16 @@ def user_dashboard() -> render_template:
 
     return render_template("emp_dashboard.html")
 
+
+@app.route("/magot-applyLeave", methods = ["POST","GET"])
+@login_required
+def apply_for_leave():
+    addLeave = LeaveHandeler(current_user)
+    addLeave.applyLeave(request)
+    return redirect(url_for("user_dashboard"))
+
+    
+
 @app.route("/logout")#, methods=['POST'])
 @login_required
 def logout() -> render_template:
@@ -100,12 +143,7 @@ def logout() -> render_template:
     logout_user()
     return render_template("index.html")
 
-@app.route("/magot/leaves")
-@login_required
-def leaves_applied() -> render_template:
-    leaves = Leave.query.filter(Leave.userId.username==current_user.usernme).all()
-    return render_template("leaves_applied.html")
-    
+
 
 if __name__ == "__main__":
     app.run(debug=True)

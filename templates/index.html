@@ -6,13 +6,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- CSS only -->
-    <link href="static/assets/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='assets/bootstrap.min.css') }}" rel="stylesheet">
     <!-- JavaScript Bundle with Popper -->
-    <script src="static/assets/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='assets/bootstrap.bundle.min.js') }}"></script>
     <title>Corporate Leaves</title>
     <style>
         body{
-            background: url("/static/images/wallpaper.jpg") no-repeat fixed;
+            background: url("{{ url_for('static', filename='images//wallpaper.jpg') }}") no-repeat fixed;
         }
     </style>
 </head>

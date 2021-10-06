@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CSS only -->
+    <link href="{{ url_for('static', filename='assets/bootstrap.min.css') }}" rel="stylesheet">
+    <!-- JavaScript Bundle with Popper -->
+    <script src="{{ url_for('static', filename='assets/bootstrap.bundle.min.js') }}"></script>
+    <title>Corporate Leaves</title>
+    <style>
+        body{
+            background: url("{{ url_for('static', filename='images//wallpaper.jpg') }}") no-repeat fixed;
+        }
+    </style>
+</head>
+
+<body>
+    <form action="/magot/applyLeave" method="POST">
+        <div class="form-group">
+            <label for="abstract">Subject of Leave</label>
+            <input type="text" name="abstract" class="form-control" 
+                aria-describedby="subjectHelp" placeholder="I'm not feeling well ...🤒">
+            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        </div>
+        <div class="form-group containerc row">
+            <div class="col-md mx-3">
+                <label for="fromDate">From</label>
+                <input type="date" name="fromdate" class="form-control" 
+                    aria-describedby="fromdateHelp" placeholder="">
+            </div>
+            <div class="col-md mx-3">
+                <label for="toDate">To</label>
+                <input type="date" name="todate" class="form-control"
+                    aria-describedby="todateHelp" placeholder="">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="summary">Summary</label>
+            <input type="text" name="summary" class="form-control" 
+            aria-describedby="summaryHelp" placeholder="Plz Understand... 😭">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</body>
+
+</html>
