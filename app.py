@@ -66,28 +66,46 @@ def start_page() -> render_template:
 
 @app.route("/login")#, methods=['POST'])
 @login_required
-def login():
+def login() -> render_template:
     #user = User.querry.filter_by(username="@mr.x")
 
     #login_user(user)
 
     return f"<p>{current_user.first_name}</p>"
 
-@app.route("/dashboard")
+@app.route("/commander/dashboard")
+@login_required
 def admin_dashboard() -> render_template:
     """
     The Start page will only include a Login page for the employer and Employee...
     Login Credintials will determine the Acount type ad the privilages one account has
     """
 
-    return render_template("index.html")
+    return render_template("admin_dashboard.html")
+
+@app.route("/magot/dashboard")
+@login_required
+def user_dashboard() -> render_template:
+    """
+    The Start page will only include a Login page for the employer and Employee...
+    Login Credintials will determine the Acount type ad the privilages one account has
+    """
+
+    return render_template("emp_dashboard.html")
 
 @app.route("/logout")#, methods=['POST'])
 @login_required
-def logout():
+def logout() -> render_template:
     k = f"<p>{current_user.first_name} has been logout</p>"
     logout_user()
-    return k
+    return render_template("index.html")
+
+@app.route("/magot/leaves")
+@login_required
+def leaves_applied() -> render_template:
+    leaves = Leave.query.filter(Leave.userId.username==current_user.usernme).all()
+    return render_template("leaves_applied.html")
+    
 
 if __name__ == "__main__":
     app.run(debug=True)
