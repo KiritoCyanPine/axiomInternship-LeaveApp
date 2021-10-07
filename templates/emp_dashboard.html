@@ -60,10 +60,43 @@
             <button type="submit" class="btn btn-primary">Submit Leave Request</button>
         </form>
     </div>
-    <div class="col-md container mt-5">
-        <div class="card bg-light mx-3 my-3 px-3 py-3" style="min-height: 40rem;">
-            Leaves You have applied for :::
+    <div class="col-md container mt-5" style="">
+        <div class="card bg-light mx-3 my-3 px-3 py-3 formfill" style="height: 42rem;overflow-y: scroll;">
+            <h4>Leaves You have applied for :::
+                <hr>
+            </h4>
+            {% for leaves in myLeaves %}
+            <div class="card-secondary mx-1 my-1 px-3 py-1 d-flex ">
+                <div class="container card">
+                    <div class="">{{leaves.abstract| truncate(30) }}</div>
+                    <hr>
+                    <div class="row">
+                        from <div class="col mx-0"><b class="text-danger "
+                                style="font-size: 110%;">{{leaves.fromDate.strftime('%d %m %Y')}}</b></div>
+                        to <div class="col mx-0"><b class="text-danger "
+                                style="font-size: 110%;">{{leaves.toDate.strftime('%d %m %Y')}}</b></div>
+                        <hr>
+                        <div class="d-flex justify-content-center">
+                            {% if leaves.leaveAccepted %}
+                            <div class="card bg-success w-100 px-2 py-1 mx-2 my-2 text-center text-light">
+                                Leave Accepted</div>
+                            {% else %}
+                            {% if (leaves.leaveAccepted) or (leaves.leaveRejected) %}
+                            <div class="card bg-danger w-100 px-2 py-1 mx-2 my-2 text-center text-light">
+                                Leave Rejected</div>
+                            {% else %}
+                            <div class="card bg-secondary w-100 px-2 py-1 mx-2 my-2 text-center text-light">
+                                Approval Pending</div>
+                            {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            {% endfor %}
         </div>
+
     </div>
 
 </body>

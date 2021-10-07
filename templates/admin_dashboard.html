@@ -6,44 +6,88 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- CSS only -->
-    <link href="{{ url_for('static', filename='assets/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="static/assets/bootstrap.min.css" rel="stylesheet">
     <!-- JavaScript Bundle with Popper -->
-    <script src="{{ url_for('static', filename='assets/bootstrap.bundle.min.js') }}"></script>
+    <script src="static/assets/bootstrap.bundle.min.js"></script>
     <title>Corporate Leaves</title>
     <style>
-        body{
-            background: url("{{ url_for('static', filename='images//wallpaper.jpg') }}") no-repeat fixed;
+        body {
+            background: url("/static/images/wallpaper.jpg") no-repeat fixed;
+        }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .formfill::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .formfill {
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
         }
     </style>
 </head>
 
-<body>
-    <form action="/magot/applyLeave" method="POST">
-        <div class="form-group">
-            <label for="abstract">Subject of Leave</label>
-            <input type="text" name="abstract" class="form-control" 
-                aria-describedby="subjectHelp" placeholder="I'm not feeling well ...🤒">
-            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-        </div>
-        <div class="form-group containerc row">
-            <div class="col-md mx-3">
-                <label for="fromDate">From</label>
-                <input type="date" name="fromdate" class="form-control" 
-                    aria-describedby="fromdateHelp" placeholder="">
+<body class="container row ">
+
+    <div class="col-md container mt-5">
+        <div class="card bg-light mx-3 my-3 px-3 py-3 formfill" style="height: 42rem;overflow-y: scroll;">
+            <h4>Leave Applications :::
+                <hr>
+            </h4>
+            {% for leaves in collection %}
+            <div class="card-secondary mx-1 my-1 px-3 py-1 d-flex ">
+                <div class="container card">
+                    <div class="mt-1">{{leaves.abstract| truncate(30) }} from <span class="text-primary float-end h6">
+                            {{leaves.userId}}</span></div>
+                    <hr>
+                    <div class="row">
+                        from <span class="col mx-0"><b class="text-danger "
+                                style="font-size: 110%;">{{leaves.fromDate.strftime('%d %m %Y')}}</b></span>
+                        to <span class="col mx-0"><b class="text-danger "
+                                style="font-size: 110%;">{{leaves.toDate.strftime('%d %m %Y')}}</b></span>
+                        <hr>
+                        <div class="d-flex justify-content-end mb-2">
+                            <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+                                data-bs-target="#bd-example-modal-lg{{leaves.Id}}">Large modal</button>
+                            <div id="bd-example-modal-lg{{leaves.Id}}" class="modal fade " tabindex="-1" role="dialog"
+                                aria-bs-labelledby="myLargeModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            {{leaves.firstname}} {{leaves.lastname}} <br>
+                                            Subject of Leave : {{leaves.abstract}}<br>
+                                            leave applied from {{leaves.fromDate.strftime('%d %m %Y')}} to
+                                            {{leaves.fromDate.strftime('%d %m %Y')}} <br>
+                                            more on the subject : {{leaves.summary}}</div>
+                                        <div class="container row d-flex ">
+                                            <a href="../commander-accept/{{leaves.id}}" class="btn btn-success"> Permit</a>
+                                            <a href="../commander-reject/{{leaves.id}}" class="btn btn-danger"> Reject</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="../commander-reject/{{leaves.id}}" class="btn btn-danger mx-2">reject without
+                                reading</a>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-            <div class="col-md mx-3">
-                <label for="toDate">To</label>
-                <input type="date" name="todate" class="form-control"
-                    aria-describedby="todateHelp" placeholder="">
-            </div>
+
+            {% endfor %}
         </div>
-        <div class="form-group">
-            <label for="summary">Summary</label>
-            <input type="text" name="summary" class="form-control" 
-            aria-describedby="summaryHelp" placeholder="Plz Understand... 😭">
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+
+    </div>
+
 </body>
+<script src="{{ url_for('static', filename='assets/bootstrap.bundle.min.js') }}"></script>
 
 </html>

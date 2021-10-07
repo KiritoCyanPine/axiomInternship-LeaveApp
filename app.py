@@ -1,3 +1,4 @@
+from re import L
 from flask import Flask , render_template, request, redirect
 from datetime import datetime
 from time import sleep
@@ -67,14 +68,32 @@ class LeaveHandeler:
             holdtime = list(map(int, toDate.split("-")))
             toDate = datetime(holdtime[0], holdtime[1], holdtime[2])
             summary = request.form["summary"]
+            
             print(fromDate, toDate)
             
-            adding = Leave(userId=userId, abstract=abstract,fromDate=fromDate,toDate=toDate,summary=summary)
+            adding = Leave(userId=userId, abstract=abstract,fromDate=fromDate,toDate=toDate,summary=summary,leaveRejected=True)
             
             db.session.add(adding)
             db.session.commit()
             return True
         return False
+    
+    def my_leaves(self):
+        myLeaves = Leave().query.filter_by(user=self.user.id)
+        return myLeaves
+    def gather_pending_leaves_admin(self):
+        gather = Leave().query.filter_by(leaveAccepted=0).filter_by(leaveRejected=0)
+        return gather
+
+    def admin_accept(self,id):
+        Leave().query.filter_by(id=str(id)).update({"leaveAccepted":True})
+        db.session.commit()
+        return True
+    def admin_reject(self,id):
+        Leave().query.filter_by(id=str(id)).update({"leaveRejected":True})
+        db.session.commit()
+        return True
+
 
 
 @login_manager.user_loader
@@ -87,7 +106,7 @@ def start_page() -> render_template:
     The Start page will only include a Login page for the employer and Employee...
     Login Credintials will determine the Acount type ad the privilages one account has
     """
-    user = User.query.filter_by(username="@lonewolf").first()
+    user = User.query.filter_by(username="@mr.x").first()
 
     login_user(user)
     
@@ -112,8 +131,25 @@ def admin_dashboard() -> render_template:
     The Start page will only include a Login page for the employer and Employee...
     Login Credintials will determine the Acount type ad the privilages one account has
     """
+    gather_leaves = LeaveHandeler(current_user)
+    collection = gather_leaves.gather_pending_leaves_admin()
 
-    return render_template("admin_dashboard.html")
+    return render_template("admin_dashboard.html", collection=collection)
+
+
+@app.route("/commander-accept/<leaveId>", methods = ["POST","GET"])
+@login_required
+def admin_accept_leave(leaveId):
+    handel = LeaveHandeler(current_user)
+    handel.admin_accept(leaveId)
+    return redirect(url_for("admin_dashboard"))
+
+@app.route("/commander-reject/<leaveId>", methods = ["POST","GET"])
+@login_required
+def admin_reject_leave(leaveId):
+    handel = LeaveHandeler(current_user)
+    handel.admin_reject(leaveId)
+    return redirect(url_for("admin_dashboard"))
 
 
 @app.route("/magot-dashboard")
@@ -123,8 +159,12 @@ def user_dashboard() -> render_template:
     The Start page will only include a Login page for the employer and Employee...
     Login Credintials will determine the Acount type ad the privilages one account has
     """
-
-    return render_template("emp_dashboard.html")
+    check_my_leaves = LeaveHandeler(current_user)
+    myLeaves = check_my_leaves.my_leaves()
+    #print(myLeaves)
+    #for _ in myLeaves:
+    #    _.fromDate = str(_.fromDate)[0:11]
+    return render_template("emp_dashboard.html", myLeaves=myLeaves)
 
 
 @app.route("/magot-applyLeave", methods = ["POST","GET"])
