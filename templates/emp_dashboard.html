@@ -30,75 +30,79 @@
     </style>
 </head>
 
-<body class="container row ">
-
-    <div class="col-md container mx-1 px-3 mt-5 d-flex justify-content-center">
-        <form class="formfill card h-75" action="/magot-applyLeave" method="POST" style="overflow-y:scroll;">
-            <div class="form-group my-2 mx-2">
-                <label for="abstract">Subject of Leave</label>
-                <input type="text" name="abstract" class="form-control" aria-describedby="subjectHelp"
-                    placeholder="I'm not feeling well ...🤒">
-                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
-                    else.</small>
-            </div>
-            <div class="form-group containerc row my-2 mx-2">
-                <div class="col-md mx-3">
-                    <label for="fromDate">From</label>
-                    <input type="date" name="fromdate" class="form-control" aria-describedby="fromdateHelp"
-                        placeholder="">
+<body>
+    {% block content %}
+    {% include "_nav.html" %}
+    {% endblock %}
+    <div class="container row ">
+        <div class="col-md container mx-1 px-3 mt-5 d-flex justify-content-center">
+            <form class="formfill card h-75" action="/magot-applyLeave" method="POST" style="overflow-y:scroll;">
+                <div class="form-group my-2 mx-2">
+                    <label for="abstract">Subject of Leave</label>
+                    <input type="text" name="abstract" class="form-control" aria-describedby="subjectHelp"
+                        placeholder="I'm not feeling well ...🤒">
+                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
+                        else.</small>
                 </div>
-                <div class="col-md mx-3">
-                    <label for="toDate">To</label>
-                    <input type="date" name="todate" class="form-control" aria-describedby="todateHelp" placeholder="">
-                </div>
-            </div>
-            <div class="form-group my-2 mx-2">
-                <label for="summary">Summary</label>
-                <textarea rows="8" type="textarea" name="summary" class="form-control" aria-describedby="summaryHelp"
-                    placeholder="brief about your reasons"></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit Leave Request</button>
-        </form>
-    </div>
-    <div class="col-md container mt-5" style="">
-        <div class="card bg-light mx-3 my-3 px-3 py-3 formfill" style="height: 42rem;overflow-y: scroll;">
-            <h4>Leaves You have applied for :::
-                <hr>
-            </h4>
-            {% for leaves in myLeaves %}
-            <div class="card-secondary mx-1 my-1 px-3 py-1 d-flex ">
-                <div class="container card">
-                    <div class="">{{leaves.abstract| truncate(30) }}</div>
-                    <hr>
-                    <div class="row">
-                        from <div class="col mx-0"><b class="text-danger "
-                                style="font-size: 110%;">{{leaves.fromDate.strftime('%d %m %Y')}}</b></div>
-                        to <div class="col mx-0"><b class="text-danger "
-                                style="font-size: 110%;">{{leaves.toDate.strftime('%d %m %Y')}}</b></div>
-                        <hr>
-                        <div class="d-flex justify-content-center">
-                            {% if leaves.leaveAccepted %}
-                            <div class="card bg-success w-100 px-2 py-1 mx-2 my-2 text-center text-light">
-                                Leave Accepted</div>
-                            {% else %}
-                            {% if (leaves.leaveAccepted) or (leaves.leaveRejected) %}
-                            <div class="card bg-danger w-100 px-2 py-1 mx-2 my-2 text-center text-light">
-                                Leave Rejected</div>
-                            {% else %}
-                            <div class="card bg-secondary w-100 px-2 py-1 mx-2 my-2 text-center text-light">
-                                Approval Pending</div>
-                            {% endif %}
-                            {% endif %}
-                        </div>
+                <div class="form-group containerc row my-2 mx-2">
+                    <div class="col-md mx-3">
+                        <label for="fromDate">From</label>
+                        <input type="date" name="fromdate" class="form-control" aria-describedby="fromdateHelp"
+                            placeholder="">
+                    </div>
+                    <div class="col-md mx-3">
+                        <label for="toDate">To</label>
+                        <input type="date" name="todate" class="form-control" aria-describedby="todateHelp"
+                            placeholder="">
                     </div>
                 </div>
-
-            </div>
-            {% endfor %}
+                <div class="form-group my-2 mx-2">
+                    <label for="summary">Summary</label>
+                    <textarea rows="8" type="textarea" name="summary" class="form-control"
+                        aria-describedby="summaryHelp" placeholder="brief about your reasons"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit Leave Request</button>
+            </form>
         </div>
+        <div class="col-md container mt-5" >
+            <div class="card bg-light mx-3 my-3 px-3 py-3 formfill" style="height: 42rem;overflow-y: scroll;">
+                <h4>Leaves You have applied for :::
+                    <hr>
+                </h4>
+                {% for leaves in myLeaves %}
+                <div class="card-secondary mx-1 my-1 px-3 py-1 d-flex ">
+                    <div class="container card">
+                        <div class="">{{leaves.abstract| truncate(30) }}</div>
+                        <hr>
+                        <div class="row">
+                            from <div class="col mx-0"><b class="text-danger "
+                                    style="font-size: 110%;">{{leaves.fromDate.strftime('%d %m %Y')}}</b></div>
+                            to <div class="col mx-0"><b class="text-danger "
+                                    style="font-size: 110%;">{{leaves.toDate.strftime('%d %m %Y')}}</b></div>
+                            <hr>
+                            <div class="d-flex justify-content-center">
+                                {% if leaves.leaveAccepted %}
+                                <div class="card bg-success w-100 px-2 py-1 mx-2 my-2 text-center text-light">
+                                    Leave Accepted</div>
+                                {% else %}
+                                {% if (leaves.leaveAccepted) or (leaves.leaveRejected) %}
+                                <div class="card bg-danger w-100 px-2 py-1 mx-2 my-2 text-center text-light">
+                                    Leave Rejected</div>
+                                {% else %}
+                                <div class="card bg-secondary w-100 px-2 py-1 mx-2 my-2 text-center text-light">
+                                    Approval Pending</div>
+                                {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
 
+                </div>
+                {% endfor %}
+            </div>
+
+        </div>
     </div>
-
 </body>
 
 </html>

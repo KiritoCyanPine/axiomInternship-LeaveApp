@@ -18,18 +18,18 @@
 </head>
 
 <body class="text-center d-flex align-items-center">
-    <form class="form-signin card container col-md-3" style="top:100px;">
+    <form class="form-signin card container col-md-3" style="top:100px;" action="/login" method="POST">
         <img class="img-fluid h-25" src="static\images\axiomio_logo.png" alt="">
         <h1 class="h3 mb-3 font-weight-normal">sign in to your desk</h1>
         <hr>
         <div class="row d-flex align-items-center my-2 mx-2">
-            <label for="inputEmail" class="col-md-4 my-1 mx-1">Username</label>
-            <input type="email" id="inputEmail" class="form-control col my-1 mx-1" placeholder="Email address" required=""
+            <label for="inputUsername" class="col-md-4 my-1 mx-1">Username</label>
+            <input name="username" type="username" id="inputUsername" class="form-control col my-1 mx-1" placeholder="username" required=""
                 autofocus="">
         </div>
         <div class="row d-flex align-items-center my-2 mx-2">
             <label for="inputPassword" class="col-md-4 my=1 mx-1">Password</label>
-            <input type="password" id="inputPassword" class="form-control col my-1 mx-1" placeholder="Password" required="">
+            <input name="password" type="password" id="inputPassword" class="form-control col my-1 mx-1" placeholder="Password" required="">
         </div>
         <hr>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>

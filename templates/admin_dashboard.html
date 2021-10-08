@@ -30,14 +30,18 @@
     </style>
 </head>
 
-<body class="container row ">
-
+<body>
+    
+    {% block content %}
+    {% include "_nav.html" %}
+    {% endblock %}
+    <div class="container row">
     <div class="col-md container mt-5">
         <div class="card bg-light mx-3 my-3 px-3 py-3 formfill" style="height: 42rem;overflow-y: scroll;">
             <h4>Leave Applications :::
                 <hr>
             </h4>
-            {% for leaves in collection %}
+            {% for leaves, usr in collection %}
             <div class="card-secondary mx-1 my-1 px-3 py-1 d-flex ">
                 <div class="container card">
                     <div class="mt-1">{{leaves.abstract| truncate(30) }} from <span class="text-primary float-end h6">
@@ -51,31 +55,63 @@
                         <hr>
                         <div class="d-flex justify-content-end mb-2">
                             <button type="button" class="btn btn-warning" data-bs-toggle="modal"
-                                data-bs-target="#bd-example-modal-lg{{leaves.Id}}">Large modal</button>
-                            <div id="bd-example-modal-lg{{leaves.Id}}" class="modal fade " tabindex="-1" role="dialog"
-                                aria-bs-labelledby="myLargeModalLabel" aria-hidden="true">
+                                data-bs-target=".bd-example-modal-lg{{leaves.id}}">read</button>
+                            <div id="" class="modal fade bd-example-modal-lg{{leaves.id}}" tabindex="-1" role="dialog"
+                                aria-bs-labelledby="myLargeModalLabel" aria-bs-hidden="true">
                                 <div class="modal-dialog modal-lg">
-                                    <div class="modal-content">
+                                    <div class="modal-content py-1" style="height:39rem;">
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            {{leaves.firstname}} {{leaves.lastname}} <br>
-                                            Subject of Leave : {{leaves.abstract}}<br>
-                                            leave applied from {{leaves.fromDate.strftime('%d %m %Y')}} to
-                                            {{leaves.fromDate.strftime('%d %m %Y')}} <br>
-                                            more on the subject : {{leaves.summary}}</div>
-                                        <div class="container row d-flex ">
-                                            <a href="../commander-accept/{{leaves.id}}" class="btn btn-success"> Permit</a>
-                                            <a href="../commander-reject/{{leaves.id}}" class="btn btn-danger"> Reject</a>
+
+                                            <b>{{usr.first_name}} {{usr.last_name}}</b> (<span
+                                                class="text-primary">{{usr.username}}</span>)<br>
+                                            <div class="container-fluid">
+                                                <div class="col">Subject of Leave :</div>
+                                                <div class="col-md-9">{{leaves.abstract}}</div>
+                                            </div><br>
+                                            <div class="container-fluid row">
+                                                <div class="col-md-5 mb-3">leave applied from&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    <span
+                                                        class="bg-danger px-2 py-2 text-light rounded h6">{{leaves.fromDate.strftime('%d/%m/%Y')}}</span>
+                                                </div>
+                                                <div class="col-md-4">to&nbsp;&nbsp;&nbsp;&nbsp; <span
+                                                        class="bg-danger px-2 py-2 text-light rounded h6">{{leaves.toDate.strftime('%d/%m/%Y')}}</span>
+                                                </div>
+                                            </div><br>
+                                            <br>
+                                            <div class="">
+                                                <div class="col-md-4">more on the subject :</div>
+                                                <div class=" px-2 py-2 rounded formfill"
+                                                    style="background-color: lightgrey;height:14rem;overflow-y: scroll;">
+                                                    {{leaves.summary}}</div>
+
+                                            </div>
+
+                                        </div>
+                                        <div class="container row d-flex justify-content-around my-1 px-0">
+                                            <a href="../commander-accept/{{leaves.id}}"
+                                                class="btn btn-success col-1 px-2">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M13.485 1.431a1.473 1.473 0 0 1 2.104 2.062l-7.84 9.801a1.473 1.473 0 0 1-2.12.04L.431 8.138a1.473 1.473 0 0 1 2.084-2.083l4.111 4.112 6.82-8.69a.486.486 0 0 1 .04-.045z" />
+                                                </svg></a>
+                                            <a href="../commander-reject/{{leaves.id}}"
+                                                class="btn btn-danger col-1 px-0">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M1.293 1.293a1 1 0 0 1 1.414 0L8 6.586l5.293-5.293a1 1 0 1 1 1.414 1.414L9.414 8l5.293 5.293a1 1 0 0 1-1.414 1.414L8 9.414l-5.293 5.293a1 1 0 0 1-1.414-1.414L6.586 8 1.293 2.707a1 1 0 0 1 0-1.414z" />
+                                                </svg></a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <a href="../commander-reject/{{leaves.id}}" class="btn btn-danger mx-2">reject without
-                                reading</a>
+                            <a href="../commander-reject/{{leaves.id}}" class="btn btn-danger mx-2">reject</a>
                         </div>
                     </div>
                 </div>
@@ -87,6 +123,7 @@
 
     </div>
 
+</div>
 </body>
 <script src="{{ url_for('static', filename='assets/bootstrap.bundle.min.js') }}"></script>
 

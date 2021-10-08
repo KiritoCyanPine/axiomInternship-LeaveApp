@@ -1,4 +1,5 @@
 from re import L
+import re
 from flask import Flask , render_template, request, redirect
 from datetime import datetime
 from time import sleep
@@ -51,6 +52,21 @@ class Leave(db.Model):
     def __repr__(self) -> str:
         return f"{self.abstract}"
 
+class UserHAndeler:
+    def login_to_account(self,request):
+        if request.method =="POST":
+            print("Function Came Here ---------")
+            username = request.form["username"]
+            password = request.form["password"]
+            try:
+                user = User().query.filter_by(username=username).first()
+                querryPassword = user.password
+            except AttributeError:
+                return None
+            if check_password_hash(querryPassword,password)!=True:
+                return None
+            login_user(user)
+            return True
 
 class LeaveHandeler:
     user:User
@@ -71,7 +87,7 @@ class LeaveHandeler:
             
             print(fromDate, toDate)
             
-            adding = Leave(userId=userId, abstract=abstract,fromDate=fromDate,toDate=toDate,summary=summary,leaveRejected=True)
+            adding = Leave(userId=userId, abstract=abstract,fromDate=fromDate,toDate=toDate,summary=summary)
             
             db.session.add(adding)
             db.session.commit()
@@ -81,18 +97,33 @@ class LeaveHandeler:
     def my_leaves(self):
         myLeaves = Leave().query.filter_by(user=self.user.id)
         return myLeaves
+
     def gather_pending_leaves_admin(self):
         gather = Leave().query.filter_by(leaveAccepted=0).filter_by(leaveRejected=0)
+        k = self.gather_user(gather)
+        gather = [i for i in gather]
+        
+        gather = zip(gather,k)
         return gather
+    
+    def gather_user(self,gather):
+        mklist = []
+        for i in gather:
+            mklist.append(User().query.filter_by(id=i.user).first())
+            
+        return mklist
+
 
     def admin_accept(self,id):
         Leave().query.filter_by(id=str(id)).update({"leaveAccepted":True})
         db.session.commit()
         return True
+
     def admin_reject(self,id):
         Leave().query.filter_by(id=str(id)).update({"leaveRejected":True})
         db.session.commit()
         return True
+    
 
 
 
@@ -106,17 +137,19 @@ def start_page() -> render_template:
     The Start page will only include a Login page for the employer and Employee...
     Login Credintials will determine the Acount type ad the privilages one account has
     """
-    user = User.query.filter_by(username="@mr.x").first()
+    #user = User.query.filter_by(username="@mr.x").first()
 
-    login_user(user)
+    #login_user(user)
     
     return render_template("index.html")
 
-@app.route("/login")#, methods=['POST'])
-@login_required
+@app.route("/login", methods=['POST'])
 def login() -> redirect:
     #user = User.querry.filter_by(username="@mr.x")
-
+    user = UserHAndeler()
+    value = user.login_to_account(request)
+    if value == None:
+        return redirect(url_for("start_page"))
     #login_user(user)
     if current_user.isAdmin:
         return redirect(url_for("admin_dashboard"))
@@ -131,25 +164,32 @@ def admin_dashboard() -> render_template:
     The Start page will only include a Login page for the employer and Employee...
     Login Credintials will determine the Acount type ad the privilages one account has
     """
-    gather_leaves = LeaveHandeler(current_user)
-    collection = gather_leaves.gather_pending_leaves_admin()
+    if current_user.isAdmin:
+        gather_leaves = LeaveHandeler(current_user)
+        collection = gather_leaves.gather_pending_leaves_admin()
+        #getuserdata = gather_leaves.gather_user_info(collection)
 
-    return render_template("admin_dashboard.html", collection=collection)
+        return render_template("admin_dashboard.html", collection=collection, current_user=current_user)
+    return redirect(url_for("logout"))
 
 
 @app.route("/commander-accept/<leaveId>", methods = ["POST","GET"])
 @login_required
-def admin_accept_leave(leaveId):
-    handel = LeaveHandeler(current_user)
-    handel.admin_accept(leaveId)
-    return redirect(url_for("admin_dashboard"))
+def admin_accept_leave(leaveId) -> redirect:
+    if  current_user.isAdmin:
+        handel = LeaveHandeler(current_user)
+        handel.admin_accept(leaveId)
+        return redirect(url_for("admin_dashboard"))
+    return redirect(url_for("logout"))
 
-@app.route("/commander-reject/<leaveId>", methods = ["POST","GET"])
+@app.route("/commander-reject/<leaveId2>", methods = ["POST","GET"])
 @login_required
-def admin_reject_leave(leaveId):
-    handel = LeaveHandeler(current_user)
-    handel.admin_reject(leaveId)
-    return redirect(url_for("admin_dashboard"))
+def admin_reject_leave(leaveId2) -> redirect:
+    if current_user.isAdmin:
+        handel = LeaveHandeler(current_user)
+        handel.admin_reject(leaveId2)
+        return redirect(url_for("admin_dashboard"))
+    return redirect(url_for("logout"))
 
 
 @app.route("/magot-dashboard")
@@ -159,20 +199,24 @@ def user_dashboard() -> render_template:
     The Start page will only include a Login page for the employer and Employee...
     Login Credintials will determine the Acount type ad the privilages one account has
     """
-    check_my_leaves = LeaveHandeler(current_user)
-    myLeaves = check_my_leaves.my_leaves()
-    #print(myLeaves)
-    #for _ in myLeaves:
-    #    _.fromDate = str(_.fromDate)[0:11]
-    return render_template("emp_dashboard.html", myLeaves=myLeaves)
+    if not current_user.isAdmin:
+        check_my_leaves = LeaveHandeler(current_user)
+        myLeaves = check_my_leaves.my_leaves()
+        #print(myLeaves)
+        #for _ in myLeaves:
+        #    _.fromDate = str(_.fromDate)[0:11]
+        return render_template("emp_dashboard.html", myLeaves=myLeaves)
+    return redirect(url_for("logout"))
 
 
 @app.route("/magot-applyLeave", methods = ["POST","GET"])
 @login_required
-def apply_for_leave():
-    addLeave = LeaveHandeler(current_user)
-    addLeave.applyLeave(request)
-    return redirect(url_for("user_dashboard"))
+def apply_for_leave() -> redirect:
+    if not current_user.isAdmin:
+        addLeave = LeaveHandeler(current_user)
+        addLeave.applyLeave(request)
+        return redirect(url_for("user_dashboard"))
+    return redirect(url_for("logout"))
 
     
 
