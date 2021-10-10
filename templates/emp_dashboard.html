@@ -75,10 +75,10 @@
                         <div class="">{{leaves.abstract| truncate(30) }}</div>
                         <hr>
                         <div class="row">
-                            from <div class="col mx-0"><b class="text-danger "
-                                    style="font-size: 110%;">{{leaves.fromDate.strftime('%d %m %Y')}}</b></div>
-                            to <div class="col mx-0"><b class="text-danger "
-                                    style="font-size: 110%;">{{leaves.toDate.strftime('%d %m %Y')}}</b></div>
+                            from <div class="col mx-0"><b class="bg-warning rounded"
+                                    style="font-size: 90%;">{{leaves.fromDate.strftime('%d-%m-%Y')}}</b></div>
+                            to <div class="col mx-0"><b class="bg-warning rounded"
+                                    style="font-size: 90%;">{{leaves.toDate.strftime('%d-%m-%Y')}}</b></div>
                             <hr>
                             <div class="d-flex justify-content-center">
                                 {% if leaves.leaveAccepted %}
