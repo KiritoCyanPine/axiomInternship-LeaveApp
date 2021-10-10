@@ -1,0 +1,10 @@
+digraph "classes_app.py" {
+rankdir=BT
+charset="utf-8"
+"app.Leave" [color="black", fontcolor="black", label="{Leave|abstract\lfromDate\lid\lleaveAccepted\lleaveRejected\lsummary\ltoDate\luser\luserId\l|}", shape="record", style="solid"];
+"app.LeaveHandeler" [color="black", fontcolor="black", label="{LeaveHandeler|user\luser\l|admin_accept(id)\ladmin_reject(id)\lapplyLeave(request: request): bool\lgather_pending_leaves_admin()\lgather_user(gather)\lmy_leaves()\l}", shape="record", style="solid"];
+"app.User" [color="black", fontcolor="black", label="{User|appliedForLeave\lemail\lfirst_name\lid\lisAdmin\llast_name\lleavesApplied\lpassword\lusername\l|}", shape="record", style="solid"];
+"app.UserHAndeler" [color="black", fontcolor="black", label="{UserHAndeler|\l|login_to_account(request)\l}", shape="record", style="solid"];
+"app.User" -> "app.LeaveHandeler" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="user", style="solid"];
+"app.User" -> "app.LeaveHandeler" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="user", style="solid"];
+}

@@ -1,0 +1,8 @@
+digraph "packages_app.py" {
+rankdir=BT
+charset="utf-8"
+"__init__" [color="black", label="__init__", shape="box", style="solid"];
+"app" [color="black", label="app", shape="box", style="solid"];
+"databasework" [color="black", label="databasework", shape="box", style="solid"];
+"databasework" -> "app" [arrowhead="open", arrowtail="none"];
+}

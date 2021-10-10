@@ -11,30 +11,47 @@
     <script src="{{ url_for('static', filename='assets/bootstrap.bundle.min.js') }}"></script>
     <title>Corporate Leaves</title>
     <style>
-        body{
-            background: url("{{ url_for('static', filename='images//wallpaper.jpg') }}") no-repeat fixed;
+        body {
+            background: url("{{ url_for('static', filename='images/wallpaper.jpg') }}") no-repeat fixed;
         }
     </style>
 </head>
 
-<body class="text-center d-flex align-items-center">
-    <form class="form-signin card container col-md-3" style="top:100px;" action="/login" method="POST">
+<body class="text-center d-flex align-items-center container-fluid">
+    <div class="col-md"></div>
+    <form class="form-signin card container col-md-3  " style="top:100px !important;" action="/login" method="POST">
+        <video class="rounded" src="{{ url_for('static', filename='assets/Jojo_-_PUTIN_mashup.mp4') }}" autoplay 
+            controls></video>
         <img class="img-fluid h-25" src="static\images\axiomio_logo.png" alt="">
         <h1 class="h3 mb-3 font-weight-normal">sign in to your desk</h1>
         <hr>
         <div class="row d-flex align-items-center my-2 mx-2">
             <label for="inputUsername" class="col-md-4 my-1 mx-1">Username</label>
-            <input name="username" type="username" id="inputUsername" class="form-control col my-1 mx-1" placeholder="username" required=""
-                autofocus="">
+            <input name="username" type="username" id="inputUsername" class="form-control col my-1 mx-1"
+                placeholder="username" required="" autofocus="">
         </div>
         <div class="row d-flex align-items-center my-2 mx-2">
             <label for="inputPassword" class="col-md-4 my=1 mx-1">Password</label>
-            <input name="password" type="password" id="inputPassword" class="form-control col my-1 mx-1" placeholder="Password" required="">
+            <input name="password" type="password" id="inputPassword" class="form-control col my-1 mx-1"
+                placeholder="Password" required="">
         </div>
         <hr>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
         <p class="mt-5 mb-3 text-muted">© KiritoCyanPine</p>
     </form>
+    <div class="col-md" >
+        <div class="  mx-4 col-md-6 card rounded ">
+            <div class="h6">Test Accounts</div>
+            <hr>
+            <div>
+                username: <span class="text-primary">@trash (employee) </span> <br>
+                username: <span class="text-primary">@lonewolf (employee)</span> <br>
+                username:<span class="text-primary"> @mr.x (admin) </span>
+                <hr>
+                password: <span class="text-primary">"password"</span>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
