@@ -17,7 +17,7 @@
     </style>
 </head>
 
-<body class="text-center d-flex align-items-center container-fluid">
+<body class="text-center d-flex align-items-center container-fluid row">
     <div class="col-md"></div>
     <form class="form-signin card container col-md-3  " style="top:100px !important;" action="/login" method="POST">
         <video class="rounded" src="{{ url_for('static', filename='assets/Jojo_-_PUTIN_mashup.mp4') }}" autoplay 
@@ -39,8 +39,8 @@
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
         <p class="mt-5 mb-3 text-muted">© KiritoCyanPine</p>
     </form>
-    <div class="col-md" >
-        <div class="  mx-4 col-md-6 card rounded ">
+    <div class="col-md mt-5"  >
+        <div class="  mx-4 col-md-6 card rounded border border-5">
             <div class="h6">Test Accounts</div>
             <hr>
             <div>
@@ -48,7 +48,7 @@
                 username: <span class="text-primary">@lonewolf (employee)</span> <br>
                 username:<span class="text-primary"> @mr.x (admin) </span>
                 <hr>
-                password: <span class="text-primary">"password"</span>
+                password: "<span class="text-primary">password</span>"
             </div>
         </div>
     </div>
