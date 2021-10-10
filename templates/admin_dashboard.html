@@ -35,8 +35,8 @@
     {% block content %}
     {% include "_nav.html" %}
     {% endblock %}
-    <div class="container row">
-    <div class="col-md container mt-5">
+    <div class="container-fluid row">
+    <div class="col-md container-fluid mt-5">
         <div class="card bg-light mx-3 my-3 px-3 py-3 formfill" style="height: 42rem;overflow-y: scroll;">
             <h4>Leave Applications :::
                 <hr>
@@ -48,10 +48,10 @@
                             {{leaves.userId}}</span></div>
                     <hr>
                     <div class="row">
-                        from <span class="col mx-0"><b class="text-danger "
-                                style="font-size: 110%;">{{leaves.fromDate.strftime('%d %m %Y')}}</b></span>
-                        to <span class="col mx-0"><b class="text-danger "
-                                style="font-size: 110%;">{{leaves.toDate.strftime('%d %m %Y')}}</b></span>
+                        from <span class="col mx-0"><b class="bg-warning rounded"
+                            style="font-size: 90%;">{{leaves.fromDate.strftime('%d-%m-%Y')}}</b></span>
+                        to <span class="col mx-0"><b class="bg-warning rounded"
+                            style="font-size: 90%;">{{leaves.toDate.strftime('%d-%m-%Y')}}</b></span>
                         <hr>
                         <div class="d-flex justify-content-end mb-2">
                             <button type="button" class="btn btn-warning" data-bs-toggle="modal"
